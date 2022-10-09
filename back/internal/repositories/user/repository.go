@@ -19,10 +19,10 @@ func New() *userTable {
 }
 
 func (repo *userTable) Get(id int) (domain.User, error) {
-	return users[id], nil
+	return users[0], nil
 }
 
 func (repo *userTable) Update(_user domain.User) (domain.User, error) {
-	users[_user.ID] = _user
+	users[0] = _user
 	return _user, nil
 }

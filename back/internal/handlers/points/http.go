@@ -18,7 +18,13 @@ func New(pointsService ports.PointsService) *HTTPHandler {
 }
 
 func (hdl *HTTPHandler) Get(c *gin.Context) {
-	id, _ := strconv.Atoi(c.Param("id"))
+	id, err := strconv.Atoi(c.Param("id"))
+
+	if err != nil {
+		c.AbortWithStatusJSON(500, gin.H{"message": err.Error()})
+		return
+	}
+
 	point, err := hdl.pointsService.Get(id)
 	if err != nil {
 		c.AbortWithStatusJSON(500, gin.H{"message": err.Error()})

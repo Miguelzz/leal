@@ -1,6 +1,7 @@
 package points_repo
 
 import (
+	"fmt"
 	"loyalty/internal/core/domain"
 )
 
@@ -26,11 +27,12 @@ func New() *PointsTable {
 }
 
 func (repo *PointsTable) Get(id int) (domain.Points, error) {
-	return points[id], nil
+	fmt.Println(points[0])
+	return points[0], nil
 }
 
 func (repo *PointsTable) Update(_points domain.Points) (domain.Points, error) {
-	points[_points.ID] = _points
+	points[0] = _points
 	return _points, nil
 }
 
