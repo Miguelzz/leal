@@ -17,6 +17,8 @@ import (
 	points_hdl "loyalty/internal/handlers/points"
 	product_hdl "loyalty/internal/handlers/product"
 	user_hdl "loyalty/internal/handlers/user"
+
+	points_evt "loyalty/internal/core/events/points"
 )
 
 func main() {
@@ -25,7 +27,9 @@ func main() {
 	productRepository := product_repo.New()
 	userRepository := user_repo.New()
 
-	pointsService := points_srv.New(pointsRepository, productRepository)
+	pointsEvents := points_evt.New()
+
+	pointsService := points_srv.New(pointsEvents, pointsRepository, productRepository)
 	productService := product_srv.New(productRepository)
 	userService := user_srv.New(userRepository)
 

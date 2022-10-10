@@ -2,17 +2,21 @@ package points_srv
 
 import (
 	"errors"
+	"fmt"
 	"loyalty/internal/core/domain"
 	"loyalty/internal/core/ports"
 )
 
 type service struct {
+	pointsEvents ports.PointsEvent
+
 	pointsRepository   ports.PointsRepository
 	productsRepository ports.ProductRepository
 }
 
-func New(pointsRepository ports.PointsRepository, productsRepository ports.ProductRepository) *service {
+func New(pointsEvents ports.PointsEvent, pointsRepository ports.PointsRepository, productsRepository ports.ProductRepository) *service {
 	return &service{
+		pointsEvents:       pointsEvents,
 		pointsRepository:   pointsRepository,
 		productsRepository: productsRepository,
 	}
@@ -27,49 +31,23 @@ func (srv *service) Get(id int) (domain.Points, error) {
 	return points, nil
 }
 
-func (srv *service) Redeem(id int, idProduct int) (domain.Points, error) {
+func (srv *service) Redeem(id int, idProduct int) error {
 
 	points, err := srv.pointsRepository.Get(id)
 	product, err := srv.productsRepository.Get(idProduct)
 	points.Points -= product.Price/1000 + 5
-	newPoints, err := srv.pointsRepository.Update(points)
+	res, err := srv.pointsEvents.Redeem(points)
 
-	if err != nil {
-		return domain.Points{}, errors.New("get points from repository has failed")
-	}
-
-	return newPoints, nil
+	fmt.Println(res)
+	return err
 }
 
-func (srv *service) Buy(id int, idProduct int) (domain.Points, error) {
+func (srv *service) Buy(id int, idProduct int) error {
 	points, err := srv.pointsRepository.Get(id)
 	product, err := srv.productsRepository.Get(idProduct)
 	points.Points += product.Price/5000 + 5
-	newPoints, err := srv.pointsRepository.Update(points)
+	res, err := srv.pointsEvents.Buy(points)
 
-	if err != nil {
-		return domain.Points{}, errors.New("get points from repository has failed")
-	}
-
-	return newPoints, nil
-}
-
-func (srv *service) Update(idProduct int, points domain.Points) (domain.Points, error) {
-
-	product, err := srv.productsRepository.Get(idProduct)
-
-	if err != nil {
-		return domain.Points{}, errors.New("get product from repository has failed")
-	}
-
-	newPoints, err := srv.pointsRepository.Update(domain.Points{
-		ID:     points.ID,
-		Points: product.Price/5000 + 5,
-	})
-
-	if err != nil {
-		return domain.Points{}, errors.New("update points repository has failed")
-	}
-
-	return newPoints, nil
+	fmt.Println(res)
+	return err
 }

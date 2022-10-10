@@ -24,13 +24,3 @@ func (srv *service) Get(id int) (domain.User, error) {
 
 	return user, nil
 }
-
-func (srv *service) Update(user domain.User) (domain.User, error) {
-	newUser, err := srv.userRepository.Update(user)
-
-	if err != nil {
-		return domain.User{}, errors.New("update user repository has failed")
-	}
-
-	return newUser, nil
-}
