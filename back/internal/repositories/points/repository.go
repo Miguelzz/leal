@@ -1,37 +1,43 @@
 package points_repo
 
 import (
-	"fmt"
+	"context"
+	"encoding/json"
+	"log"
 	"loyalty/internal/core/domain"
+	"loyalty/internal/repositories/mocks"
+
+	"github.com/segmentio/kafka-go"
 )
 
-var users = []domain.User{
-	{
-		ID:       1,
-		IdPoints: 1,
-	},
+type pointsTable struct {
 }
 
-var points = []domain.Points{
-	{
-		ID:     1,
-		Points: 0,
-	},
+func New() *pointsTable {
+
+	conn, err := kafka.DialLeader(context.Background(), "tcp", "localhost:9092", "points", 0)
+	if err != nil {
+		log.Fatal("failed to dial leader:", err)
+	}
+
+	for {
+		m, err := conn.ReadMessage(10e3)
+		if err != nil {
+			break
+		}
+
+		p := domain.Points{}
+		json.Unmarshal(m.Value, &p)
+		mocks.MockReadPoints[p.ID] = p
+	}
+
+	if err := conn.Close(); err != nil {
+		log.Fatal("failed to close reader:", err)
+	}
+
+	return &pointsTable{}
 }
 
-type PointsTable struct {
-}
-
-func New() *PointsTable {
-	return &PointsTable{}
-}
-
-func (repo *PointsTable) Get(id int) (domain.Points, error) {
-	fmt.Println(points[0])
-	return points[id-1], nil
-}
-
-func (repo *PointsTable) Update(_points domain.Points) (domain.Points, error) {
-	points[_points.ID-1] = _points
-	return _points, nil
+func (repo *pointsTable) Get(id int) (domain.Points, error) {
+	return mocks.MockReadPoints[id], nil
 }
