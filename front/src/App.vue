@@ -18,7 +18,7 @@
 
     <section class="container products mt-4">
       <div v-for="p in products" :key="p" class="card" style="width: 18rem">
-        <div class="point">{{ p.price / 100 + 5 }}</div>
+        <div class="point">{{ p.price / 1000 + 5 }}</div>
         <img :src="p.image" class="card-img-top" />
         <div class="card-body">
           <h5 class="card-title">{{ p.name }} ${{ p.price }}</h5>
@@ -30,14 +30,14 @@
             class="d-flex flex-row justify-content-around align-items-center"
           >
             <a
-              @click="buy(p.id)"
+              @click="buy(p)"
               v-if="balance >= p.price"
               class="btn btn-primary btn-success"
               >BUY</a
             >
             <a
-              @click="redeem(p.id)"
-              v-if="points >= p.price / 100 + 5"
+              @click="redeem(p)"
+              v-if="points >= p.price / 1000 + 5"
               class="btn btn-primary btn-warning"
               >REDEEM</a
             >
@@ -55,42 +55,39 @@ export default {
   data() {
     return {
       points: 0,
-      balance: 0,
+      balance: 200_000,
       products: [],
     };
   },
 
   methods: {
-    buy(id) {
-      fetch("http://localhost:4000/buy/" + id, { method: "POST" })
+    buy(p) {
+      fetch("http://localhost:8080/buy/1/" + p.id, { method: "POST" })
         .then((response) => response.json())
         .then((data) => {
-          this.balance = data.balance;
+          this.balance -= p.price;
           this.points = data.points;
         });
     },
-    redeem(id) {
-      fetch("http://localhost:4000/redeem/" + id, { method: "POST" })
+    redeem(p) {
+      fetch("http://localhost:8080/redeem/1/" + p.id, { method: "POST" })
         .then((response) => response.json())
         .then((data) => {
-          this.balance = data.balance;
           this.points = data.points;
         });
     },
   },
 
   mounted() {
-    fetch("http://localhost:4000/products")
+    fetch("http://localhost:8080/products")
       .then((response) => response.json())
       .then((data) => {
         this.products = data;
       });
 
-    fetch("http://localhost:4000/state")
+    fetch("http://localhost:8080/points/1")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        this.balance = data.balance;
         this.points = data.points;
       });
   },

@@ -23,6 +23,6 @@ func (repo *userTable) Get(id int) (domain.User, error) {
 }
 
 func (repo *userTable) Update(_user domain.User) (domain.User, error) {
-	users[0] = _user
+	users[_user.ID-1] = _user
 	return _user, nil
 }

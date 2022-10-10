@@ -1,6 +1,9 @@
 package main
 
 import (
+	"time"
+
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	points_repo "loyalty/internal/repositories/points"
@@ -31,9 +34,20 @@ func main() {
 	userHandler := user_hdl.New(userService)
 
 	router := gin.New()
+	router.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"*"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
 	router.GET("/points/:id", pointsHandler.Get)
-	router.GET("/products/:id", productHandler.Get)
+	router.GET("/products", productHandler.All)
 	router.GET("/users/:id", userHandler.Get)
+	router.POST("/buy/:id/:idProduct", pointsHandler.Buy)
+	router.POST("/redeem/:id/:idProduct", pointsHandler.Redeem)
 
 	router.Run(":8080")
 }

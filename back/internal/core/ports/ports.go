@@ -24,6 +24,8 @@ type UserService interface {
 
 type PointsService interface {
 	Get(id int) (domain.Points, error)
+	Buy(id int, idProduct int) (domain.Points, error)
+	Redeem(id int, idProduct int) (domain.Points, error)
 	Update(idProduct int, points domain.Points) (domain.Points, error)
 }
 

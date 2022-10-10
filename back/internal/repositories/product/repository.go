@@ -65,5 +65,5 @@ func (repo *productTable) All() ([]domain.Product, error) {
 }
 
 func (repo *productTable) Get(id int) (domain.Product, error) {
-	return products[0], nil
+	return products[id-1], nil
 }

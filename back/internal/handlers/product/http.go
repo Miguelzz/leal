@@ -27,3 +27,13 @@ func (hdl *HTTPHandler) Get(c *gin.Context) {
 
 	c.JSON(200, product)
 }
+
+func (hdl *HTTPHandler) All(c *gin.Context) {
+	products, err := hdl.productService.All()
+	if err != nil {
+		c.AbortWithStatusJSON(500, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(200, products)
+}

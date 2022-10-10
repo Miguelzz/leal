@@ -19,13 +19,31 @@ func New(pointsService ports.PointsService) *HTTPHandler {
 
 func (hdl *HTTPHandler) Get(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
-
+	point, err := hdl.pointsService.Get(id)
 	if err != nil {
 		c.AbortWithStatusJSON(500, gin.H{"message": err.Error()})
 		return
 	}
 
-	point, err := hdl.pointsService.Get(id)
+	c.JSON(200, point)
+}
+
+func (hdl *HTTPHandler) Redeem(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	idProduct, err := strconv.Atoi(c.Param("idProduct"))
+	point, err := hdl.pointsService.Redeem(id, idProduct)
+	if err != nil {
+		c.AbortWithStatusJSON(500, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(200, point)
+}
+
+func (hdl *HTTPHandler) Buy(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	idProduct, err := strconv.Atoi(c.Param("idProduct"))
+	point, err := hdl.pointsService.Buy(id, idProduct)
 	if err != nil {
 		c.AbortWithStatusJSON(500, gin.H{"message": err.Error()})
 		return
