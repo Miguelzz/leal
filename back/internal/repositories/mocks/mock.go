@@ -4,21 +4,21 @@ import "loyalty/internal/core/domain"
 
 var MockUsers = []domain.User{
 	{
-		ID:       1,
+		ID:       0,
 		IdPoints: 1,
 	},
 }
 
 var MockWriterPoints = []domain.Points{
 	{
-		ID:     1,
+		ID:     0,
 		Points: 0,
 	},
 }
 
 var MockReadPoints = []domain.Points{
 	{
-		ID:     1,
+		ID:     0,
 		Points: 0,
 	},
 }

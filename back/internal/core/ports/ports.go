@@ -8,6 +8,7 @@ type UserRepository interface {
 
 type PointsRepository interface {
 	Get(id int) (domain.Points, error)
+	Update(points domain.Points) (domain.Points, error)
 }
 
 type ProductRepository interface {
@@ -21,8 +22,8 @@ type UserService interface {
 
 type PointsService interface {
 	Get(id int) (domain.Points, error)
-	Buy(id int, idProduct int) error
-	Redeem(id int, idProduct int) error
+	Buy(id int, idProduct int) (domain.Points, error)
+	Redeem(id int, idProduct int) (domain.Points, error)
 }
 
 type ProductService interface {

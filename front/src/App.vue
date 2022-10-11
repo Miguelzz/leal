@@ -62,7 +62,7 @@ export default {
 
   methods: {
     buy(p) {
-      fetch("http://localhost:8080/buy/1/" + p.id, { method: "POST" })
+      fetch("http://localhost:8080/buy/0/" + p.id, { method: "POST" })
         .then((response) => response.json())
         .then((data) => {
           this.balance -= p.price;
@@ -70,7 +70,7 @@ export default {
         });
     },
     redeem(p) {
-      fetch("http://localhost:8080/redeem/1/" + p.id, { method: "POST" })
+      fetch("http://localhost:8080/redeem/0/" + p.id, { method: "POST" })
         .then((response) => response.json())
         .then((data) => {
           this.points = data.points;
@@ -85,7 +85,7 @@ export default {
         this.products = data;
       });
 
-    fetch("http://localhost:8080/points/1")
+    fetch("http://localhost:8080/points/0")
       .then((response) => response.json())
       .then((data) => {
         this.points = data.points;

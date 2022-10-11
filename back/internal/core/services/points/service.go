@@ -31,23 +31,25 @@ func (srv *service) Get(id int) (domain.Points, error) {
 	return points, nil
 }
 
-func (srv *service) Redeem(id int, idProduct int) error {
+func (srv *service) Redeem(id int, idProduct int) (domain.Points, error) {
 
 	points, err := srv.pointsRepository.Get(id)
 	product, err := srv.productsRepository.Get(idProduct)
 	points.Points -= product.Price/1000 + 5
 	res, err := srv.pointsEvents.Redeem(points)
+	newPoints, err := srv.pointsRepository.Update(points)
+	fmt.Println(res, points)
 
-	fmt.Println(res)
-	return err
+	return newPoints, err
 }
 
-func (srv *service) Buy(id int, idProduct int) error {
+func (srv *service) Buy(id int, idProduct int) (domain.Points, error) {
 	points, err := srv.pointsRepository.Get(id)
 	product, err := srv.productsRepository.Get(idProduct)
 	points.Points += product.Price/5000 + 5
 	res, err := srv.pointsEvents.Buy(points)
+	newPoints, err := srv.pointsRepository.Update(points)
+	fmt.Println(res, points)
 
-	fmt.Println(res)
-	return err
+	return newPoints, err
 }

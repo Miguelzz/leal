@@ -1,0 +1,4 @@
+zookeeper-server-start $env:KAFKA_CONFIG\zookeeper.properties
+
+kafka-server-start $env:KAFKA_CONFIG\server1.properties
+

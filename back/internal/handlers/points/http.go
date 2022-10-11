@@ -31,13 +31,13 @@ func (hdl *HTTPHandler) Get(c *gin.Context) {
 func (hdl *HTTPHandler) Redeem(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	idProduct, _ := strconv.Atoi(c.Param("idProduct"))
-	hdl.pointsService.Redeem(id, idProduct)
-	c.JSON(200, true)
+	points, _ := hdl.pointsService.Redeem(id, idProduct)
+	c.JSON(200, points)
 }
 
 func (hdl *HTTPHandler) Buy(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	idProduct, _ := strconv.Atoi(c.Param("idProduct"))
-	hdl.pointsService.Buy(id, idProduct)
-	c.JSON(200, true)
+	points, _ := hdl.pointsService.Buy(id, idProduct)
+	c.JSON(200, points)
 }
